@@ -22,17 +22,12 @@ public class PostController {
     }
 
     @GetMapping
-    public List<PostDto> getAllPosts() {
-        return postService.getAllPosts();
+    public List<PostDto> getAllPosts(
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
+    ) {
+        return postService.getAllPosts(pageNo, pageSize);
     }
-
-//     @GetMapping
-//     public List<PostDto> getAllPosts(
-//             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-//             @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
-//     ) {
-//         return postService.getAllPosts(pageNo, pageSize);
-//     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PostDto> getPostById(@PathVariable("id") long postId) {
