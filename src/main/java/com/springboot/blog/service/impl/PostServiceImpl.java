@@ -12,10 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -61,26 +58,17 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDto> getAllPosts() {
-        List<Post> posts = postRepository.findAll();
+    public List<PostDto> getAllPosts(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
 
-        List<PostDto> postsDto = posts.stream().map(post -> mapToDTO(post)).collect(Collectors.toList());
+        Page<Post> posts = postRepository.findAll(pageable);
+
+        List<Post> postList = posts.getContent();
+
+        List<PostDto> postsDto = postList.stream().map(post -> mapToDTO(post)).collect(Collectors.toList());
 
         return postsDto;
     }
-
-//    @Override
-//    public List<PostDto> getAllPosts(int pageNo, int pageSize) {
-//        Pageable pageable = PageRequest.of(pageNo, pageSize);
-//
-//        Page<Post> posts = postRepository.findAll(pageable);
-//
-//        List<Post> postList = posts.getContent();
-//
-//        List<PostDto> postsDto = postList.stream().map(post -> mapToDTO(post)).collect(Collectors.toList());
-//
-//        return postsDto;
-//    }
 
     @Override
     public PostDto getPostById(long postId) {
