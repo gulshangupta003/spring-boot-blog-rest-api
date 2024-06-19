@@ -6,6 +6,7 @@ import com.springboot.blog.payload.PostDto;
 import com.springboot.blog.payload.PostResponse;
 import com.springboot.blog.repository.PostRepository;
 import com.springboot.blog.service.PostService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,27 +23,17 @@ public class PostServiceImpl implements PostService {
     @Autowired
     private PostRepository postRepository;
 
+    @Autowired
+    private ModelMapper mapper;
+
     // Convert DTO to Entity
     private Post mapToEntity(PostDto postDto) {
-        Post post = Post.builder()
-                .title(postDto.getTitle())
-                .description(postDto.getDescription())
-                .content(postDto.getContent())
-                .build();
-
-        return post;
+        return mapper.map(postDto, Post.class);
     }
 
     // Convert Post Entity to PostDto
     private PostDto mapToDTO(Post post) {
-        PostDto postDto = PostDto.builder()
-                .id(post.getId())
-                .title(post.getTitle())
-                .description(post.getDescription())
-                .content(post.getContent())
-                .build();
-
-        return postDto;
+        return mapper.map(post, PostDto.class);
     }
 
     @Override
